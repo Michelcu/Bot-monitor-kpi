@@ -144,6 +144,9 @@ class ReportGenerator:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Monitor de Logo KPI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {{
             margin: 0;
@@ -152,20 +155,67 @@ class ReportGenerator:
         }}
         
         body {{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
-            padding: 20px;
-            color: #f7f2ec;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0a;
+            padding: 0;
+            color: #e5e5e5;
+            min-height: 100vh;
+        }}
+        
+        .header {{
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            padding: 40px 20px;
+            border-bottom: 3px solid #f21717;
+            box-shadow: 0 4px 20px rgba(242, 23, 23, 0.3);
+        }}
+        
+        .header-content {{
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }}
+        
+        .logo-main {{
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 0 20px rgba(242, 23, 23, 0.6));
+            animation: pulse 3s ease-in-out infinite;
+        }}
+        
+        @keyframes pulse {{
+            0%, 100% {{ filter: drop-shadow(0 0 20px rgba(242, 23, 23, 0.6)); }}
+            50% {{ filter: drop-shadow(0 0 30px rgba(242, 23, 23, 0.9)); }}
+        }}
+        
+        .header-text {{
+            text-align: left;
+        }}
+        
+        .header-text h1 {{
+            color: #ffffff;
+            font-size: 2.2em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 5px;
+            text-transform: none;
+        }}
+        
+        .header-text .subtitle {{
+            color: #999;
+            font-size: 0.95em;
+            font-weight: 400;
+            margin: 0;
+            text-align: left;
         }}
         
         .container {{
             max-width: 1400px;
             margin: 0 auto;
-            background: #1e1e1e;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(242,23,23,0.3);
-            padding: 30px;
-            border: 2px solid #f21717;
+            background: transparent;
+            padding: 40px 20px;
         }}
         
         h1 {{
@@ -196,129 +246,183 @@ class ReportGenerator:
         
         .stats-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
         }}
         
         .stat-card {{
-            background: linear-gradient(135deg, #f21717 0%, #c71414 100%);
-            color: #f7f2ec;
-            padding: 25px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #151515 100%);
+            color: #e5e5e5;
+            padding: 30px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(242,23,23,0.3);
-            border: 1px solid #f21717;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2a2a2a;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .stat-card::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f21717 0%, #ff3333 100%);
+        }}
+        
+        .stat-card:hover {{
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(242, 23, 23, 0.3);
+            border-color: #f21717;
         }}
         
         .stat-card h3 {{
-            font-size: 0.9em;
+            font-size: 0.85em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            opacity: 0.9;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+            opacity: 0.7;
+            font-weight: 600;
         }}
         
         .stat-card .value {{
-            font-size: 2.5em;
-            font-weight: bold;
+            font-size: 3em;
+            font-weight: 700;
+            line-height: 1;
+            color: #ffffff;
         }}
         
-        .stat-card.success {{
-            background: linear-gradient(135deg, #dbbfaf 0%, #c7a58f 100%);
-            color: #1e1e1e;
+        .stat-card.success::before {{
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
         }}
         
-        .stat-card.danger {{
-            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
-            border: 2px solid #f21717;
+        .stat-card.success .value {{
+            color: #10b981;
+        }}
+        
+        .stat-card.danger::before {{
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+        }}
+        
+        .stat-card.danger .value {{
+            color: #ef4444;
         }}
         
         .section-title {{
-            color: #f21717;
-            font-size: 1.8em;
-            margin: 40px 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #f21717;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #ffffff;
+            font-size: 1.5em;
+            margin: 50px 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #2a2a2a;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }}
+        
+        .section-title::before {{
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #f21717 0%, #ff3333 100%);
+            border-radius: 2px;
         }}
         
         table {{
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
-            background: #2d2d2d;
-            border: 1px solid #3d3d3d;
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }}
         
         th {{
-            background: linear-gradient(135deg, #f21717 0%, #c71414 100%);
-            color: #f7f2ec;
-            padding: 15px;
+            background: #0f0f0f;
+            color: #ffffff;
+            padding: 18px 20px;
             text-align: left;
             font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85em;
+            font-size: 0.9em;
             letter-spacing: 0.5px;
+            border-bottom: 2px solid #f21717;
         }}
         
         td {{
-            padding: 12px 15px;
-            border-bottom: 1px solid #3d3d3d;
-            color: #f7f2ec;
+            padding: 16px 20px;
+            border-bottom: 1px solid #252525;
+            color: #e5e5e5;
+            font-size: 0.95em;
+        }}
+        
+        tr:last-child td {{
+            border-bottom: none;
         }}
         
         tr:hover {{
-            background-color: #3d3d3d;
+            background-color: #202020;
         }}
         
         .thumbnail {{
-            width: 150px;
+            width: 180px;
             height: auto;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+            border: 2px solid transparent;
         }}
         
         .thumbnail:hover {{
             transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(242, 23, 23, 0.5);
+            border-color: #f21717;
         }}
         
         .detected {{
-            background-color: #2d3d2d;
+            background-color: rgba(16, 185, 129, 0.05);
         }}
         
         .not-detected {{
-            background-color: #3d2d2d;
+            background-color: rgba(239, 68, 68, 0.05);
         }}
         
         .status-detected {{
-            color: #dbbfaf;
-            font-size: 1.5em;
+            color: #10b981;
+            font-size: 1.8em;
             font-weight: bold;
         }}
         
         .status-not-detected {{
-            color: #f21717;
-            font-size: 1.5em;
+            color: #ef4444;
+            font-size: 1.8em;
             font-weight: bold;
         }}
         
         .footer {{
             text-align: center;
-            color: #dbbfaf;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #3d3d3d;
+            color: #666;
+            margin-top: 60px;
+            padding: 30px 20px;
+            border-top: 1px solid #2a2a2a;
+            font-size: 0.9em;
+        }}
+        
+        .footer p {{
+            margin: 5px 0;
         }}
         
         .no-data {{
             text-align: center;
-            padding: 60px;
-            color: #dbbfaf;
-            font-size: 1.2em;
+            padding: 80px 40px;
+            color: #666;
+            font-size: 1.1em;
         }}
         
         @media (max-width: 768px) {{
@@ -337,12 +441,17 @@ class ReportGenerator:
     </style>
 </head>
 <body>
+    <div class="header">
+        <div class="header-content">
+            <img src="../data/logos/kpi_logo.svg" alt="LFA Logo" class="logo-main">
+            <div class="header-text">
+                <h1>Stream Monitor Dashboard</h1>
+                <p class="subtitle">Monitoreo en tiempo real de logo en streams de Twitch</p>
+            </div>
+        </div>
+    </div>
+    
     <div class="container">
-        <h1>
-            <img src="../data/logos/kpi_logo.svg" alt="KPI Logo" class="logo-header">
-            Monitor de Logo KPI
-        </h1>
-        <p class="subtitle">Dashboard de Detección en Streams de Twitch</p>
         
         <div class="stats-grid">
             <div class="stat-card">
